@@ -6,6 +6,19 @@ This guide provides comprehensive instructions for installing and using eks-node
 
 ### Method 1: Pre-built Binary (Recommended)
 
+**Option A: Use included binary (fastest)**
+```powershell
+# Navigate to the included Windows binary
+cd bin/windows
+
+# Run directly
+.\eks-node-viewer.exe
+
+# Or copy to your PATH for global access
+copy eks-node-viewer.exe $env:USERPROFILE\go\bin\
+```
+
+**Option B: Download from releases**
 1. **Download the latest release:**
    - Go to [GitHub Releases](https://github.com/awslabs/eks-node-viewer/releases)
    - Download the Windows binary (`eks-node-viewer-windows-amd64.zip`)
