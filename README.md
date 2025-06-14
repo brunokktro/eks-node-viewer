@@ -24,7 +24,14 @@ brew install eks-node-viewer
 
 #### Windows
 
-Download the latest Windows binary from [GitHub Releases](https://github.com/awslabs/eks-node-viewer/releases) or use the pre-built binary in `bin/windows/eks-node-viewer.exe`.
+Download the latest Windows binary from [GitHub Releases](https://github.com/awslabs/eks-node-viewer/releases) or use PowerShell to download and extract:
+
+```powershell
+# Download and extract
+Invoke-WebRequest -Uri "https://github.com/awslabs/eks-node-viewer/releases/latest/download/eks-node-viewer-windows-amd64.zip" -OutFile "eks-node-viewer.zip"
+Expand-Archive -Path "eks-node-viewer.zip" -DestinationPath . -Force
+.\eks-node-viewer.exe
+```
 
 For detailed Windows installation and build instructions, see [WINDOWS.md](WINDOWS.md).
 
