@@ -1,0 +1,64 @@
+name: Windows Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+    
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~\AppData\Local\go-build
+          ~\go\pkg\mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    
+    - name: Download dependencies
+      run: go mod download
+    
+    - name: Run tests
+      run: go test -v ./...
+    
+    - name: Build Windows binary
+      run: |
+        $env:CGO_ENABLED = "0"
+        $env:GOOS = "windows"
+        $env:GOARCH = "amd64"
+        go build -ldflags="-s -w" -o eks-node-viewer.exe ./cmd/eks-node-viewer
+    
+    - name: Test PowerShell build script
+      run: |
+        .\build.ps1 -Clean
+        .\build.ps1 -Test
+    
+    - name: Verify binary
+      run: |
+        if (Test-Path "eks-node-viewer.exe") {
+          Write-Host "✅ Binary created successfully"
+          $version = .\eks-node-viewer.exe --version 2>&1
+          Write-Host "Version output: $version"
+        } else {
+          Write-Host "❌ Binary not found"
+          exit 1
+        }
+    
+    - name: Upload Windows binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: eks-node-viewer-windows
+        path: eks-node-viewer.exe
